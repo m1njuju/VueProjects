@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+<body>
+    <div id="app">
+        <v-app>
+            <!-- 상단 툴바 -->
+            <toolbar-component></toolbar-component>
+
+            <v-main>
+                <v-container>
+                    <v-row>
+                        <v-col 
+                        v-for="n in 9"
+                        :key="n"
+                        class="d-flex child-flex"
+                        cols="6"
+                        sm="3"
+                        >
+                        <v-img 
+                        :src="'https://picsum.photos/id/0/500'"
+                        :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
+                        aspect-ratio="1"
+                        class="grey lighten-2 "
+                        max-width="200px"
+                        @click=""
+                        >
+
+                            <!--이미지 로딩 진행 써클 -->
+                            <template v-slot:placeholder>
+                                <v-row
+                                    class="fill-height ma-0"
+                                    align="center"
+                                    justify="center"
+                                >
+                                    <v-progress-circular
+                                    indeterminate
+                                    color="grey lighten-5"
+                                    ></v-progress-circular>
+                                </v-row>
+                            </template>
+
+                            <!-- 추가 버튼 이미지 끝에 항상 붙을 수 있게 -->
+                            <v-btn icon>
+                                <v-icon>mdi-plus-box-outline</v-icon>
+                            </v-btn>
+
+                        </v-img>
+                            
+                        </v-col>
+                    </v-row>
+                </v-container>
+
+                <v-container>
+
+                    <!-- 달력 부분 -->
+                    <div>
+                        <v-row>
+                            <v-col>
+                                <v-sheet>
+                                    <v-toolbar flat>
+                                        <v-btn outlined class="mr-4"
+                                            color="info lighten-2" @click="setToday"
+                                        >Today</v-btn>
+
+                                        <v-btn fab text small
+                                            color="info lighten-2" @click="prev">
+                                            <v-icon> mdi-chevron-left </v-icon>
+                                        </v-btn>
+
+                                        <v-btn fab text small
+                                            color="info lighten-2" @click="next">
+                                            <v-icon> mdi-chevron-right </v-icon>
+                                        </v-btn>
+                                        
+                                        <v-toolbar-title v-if="$refs.calendar">
+                                            {{ $refs.calendar.title }}
+                                        </v-toolbar-title>
+                                    </v-toolbar>
+                                </v-sheet>
+                            
+                                <v-sheet height="300">
+                                    <v-calendar
+                                    ref="calendar"
+                                    v-model="focus"
+                                    color="info lighten-2"
+                                    :type="type"
+                                    ></v-calendar>
+                                </v-sheet>
+                            </v-col>
+                        </v-row>
+                    </div>
+
+                </v-container>
+
+
+
+                <!--일기 작성란 -->
+                <v-container>
+                    <v-card max-width="1000px">
+
+                        <v-row>
+                            <v-col cols="4">
+                                <v-img 
+                                :src="`https://picsum.photos/500/300?image`"
+                                :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
+                                aspect-ratio="1"
+                                class="grey lighten-2 .float-left ml-5 mt-5"
+                                max-width="200px"
+                                @click=""
+                                >
+
+                                <!--이미지 로딩 진행 써클 -->
+                                <template v-slot:placeholder>
+                                    <v-row
+                                        class="fill-height ma-0"
+                                        align="center"
+                                        justify="center"
+                                    >
+                                        <v-progress-circular
+                                        indeterminate
+                                        color="grey lighten-5"
+                                        ></v-progress-circular>
+                                    </v-row>
+                                </template>
+
+                                </v-img>
+                            </v-col>
+
+                            <v-col cols="8">
+                                <!--날짜 입력 -->
+                                <v-card-text><input type="date"></v-card-text>
+
+                                <!-- 기분 선택칸 -->
+                                <v-card-text>
+                                    오늘의 기분
+                                    <v-row justify="space-around">
+                                        <v-col
+                                        cols="12"
+                                        sm="10"
+                                        md="8"
+                                        >
+                                            <v-chip-group
+                                            mandatory
+                                            active-class="pink--text"
+                                            >
+                                                <v-chip
+                                                v-for="tag in tags"
+                                                :key="tag"
+                                                >
+                                                <v-icon>
+                                                    {{ tag }}
+                                                </v-icon>
+                                                </v-chip>
+                                            </v-chip-group>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+
+                                <v-card-text>
+                                    <div>오늘의 할 일   <input type="text" style="position: relative; left:60px;">
+                                        <v-card-action>
+                                            <v-btn icon style="position: relative; left:60px;">
+                                                <v-icon dark>mdi-pencil</v-icon>
+                                            </v-btn>
+                                        </v-card-action>
+                                    </div><br>
+                                    <div>오늘 먹은 것  <input type="text" style="position: relative; left:60px;"> 
+                                        <v-card-action>
+                                            <v-btn icon style="position: relative; left:60px;">
+                                                <v-icon dark>mdi-pencil</v-icon>
+                                            </v-btn>
+                                        </v-card-action>
+                                    </div>
+                                </v-card-text>
+                            </v-col>
+                        </v-row>
+
+                        <v-divider class="mx-4"></v-divider>
+                        <v-card-text>
+                            <div>
+                                <textarea style="resize:none;" cols="90" rows="20" placeholder="오늘의 일기를 작성해 주세요"></textarea>
+                            </div>
+                        </v-card-text>
+
+                        <v-card-actions >
+                            <v-spacer></v-spacer>
+                            <v-btn justify-center>완료</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-container>
+                
+            </v-main>
+
+        </v-app>
+    </div>
+
+
+
+    <!--툴바 컴포넌트-->
+    <!--<script src="./components/toolbar.js"></script>-->
+
+    <!--일기 작성 칸 컴포넌트-->
+    <script src="./components/write.js"></script>
+
+    <!-- 뷰 인스턴스 -->
+    <script>
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            data : {
+                tags: [
+                    'mdi-emoticon-excited-outline',
+                    'mdi-emoticon-happy-outline',
+                    'mdi-emoticon-neutral-outline',
+                    'mdi-emoticon-sad-outline',
+                    'mdi-emoticon-angry-outline',
+
+                ],
+                focus: '',
+                type: 'month',
+            },
+            mounted () {
+                this.$refs.calendar.checkChange()
+            },
+            methods: {
+                setToday () {
+                    this.focus = ''
+                },
+                prev () {
+                    this.$refs.calendar.prev()
+                },
+                next () {
+                    this.$refs.calendar.next()
+                },
+                
+            },
+        })
+    </script>
+</body>
+</html>
