@@ -78,18 +78,18 @@ Vue.component('write-component',{
 
                 <v-card-text>
                     <div>오늘의 할 일   <input type="text" style="position: relative; left:60px;">
-                        <v-card-action>
+                        <v-card-actions>
                             <v-btn icon style="position: relative; left:60px;">
                                 <v-icon dark>mdi-pencil</v-icon>
                             </v-btn>
-                        </v-card-action>
+                        </v-card-actions>
                     </div><br>
                     <div>오늘 먹은 것  <input type="text" style="position: relative; left:60px;"> 
-                        <v-card-action>
+                        <v-card-actions>
                             <v-btn icon style="position: relative; left:60px;">
                                 <v-icon dark>mdi-pencil</v-icon>
                             </v-btn>
-                        </v-card-action>
+                        </v-card-actions>
                     </div>
                 </v-card-text>
             </v-col>
