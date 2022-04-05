@@ -10,21 +10,24 @@ Vue.component('toolbar-component',{
             ],
             menuList: [
                 {
-                    title : '스타벅스',
-                    icon : 'mdi-coffee-maker',
+                    title : '내 정보',
+                    icon : 'mdi-information-outline',
                 },
                 {
-                    title : '애플',
-                    icon : 'mdi-apple',
+                    title : '설정',
+                    icon : 'mdi-cog-outline',
                 },
                 {
-                    title : '페이스북',
-                    icon : 'mdi-facebook',
+                    title : '커뮤니티',
+                    icon : 'mdi-comment-processing-outline',
                 }
             ],
             focus: '',
             type: 'month',
             closeOnContentClick: false,
+            toggle:true,
+            dialog:false,
+            show:false,
         }
     },
     computed: {
@@ -43,90 +46,99 @@ Vue.component('toolbar-component',{
         next () {
             this.$refs.calendar.next()
         },
+        addWrite () {
+            this.dialog=true;
+            EventBus.$emit('click');
+        },
+        
+        toggleShow () {
+            this.show = !this.show;
+            this.toggle= !this.toggle;
+            EventBus.$emit('toggle')
+        }
     },
+    
     template:`
     <div>
     <!-- 상단 툴바 -->
             <v-app-bar app color="info lighten-2" dark>
                 <v-app-bar-nav-icon @click="ndrawer = true"></v-app-bar-nav-icon>
-                <v-toolbar-title >오늘의 일기</v-toolbar-title>
+                <v-toolbar-title >오늘의 프레임</v-toolbar-title>
 
-                
                 <v-spacer></v-spacer>
+
 
                 <!-- 날짜 선택으로 검색할 수 있게 -->
 
                 <v-menu bottom left :close-on-content-click="closeOnContentClick"
                 class="position:relative;overflow-x:hidden;">
-                <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                    dark
-                    icon
-                    v-bind="attrs"
-                    v-on="on"
-                >
-                    <v-icon>mdi-calendar-month-outline</v-icon>
-                </v-btn>
-                </template>
+                    <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                        dark
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="$refs.calendar"
+                    >
+                        <v-icon>mdi-calendar-month-outline</v-icon>
+                    </v-btn>
+                    </template>
 
-                <!-- 캘린더 부분 -->
-                <div>
-                    <v-row>
-                        <v-col>
-                            <v-sheet>
-                                <v-toolbar flat>
-                                    <v-btn outlined class="mr-4"
-                                        color="info lighten-2" @click="setToday">Today</v-btn>
+                    <!-- 캘린더 부분 -->
+                    <div>
+                        <v-sheet>
+                            <v-toolbar flat>
+                                <v-btn outlined class="mr-4"
+                                color="info lighten-2" @click="setToday">Today</v-btn>
 
-                                    <v-btn fab text small
-                                        color="info lighten-2" @click="prev">
+                                <v-btn fab text small
+                                color="info lighten-2" @click="prev">
                                         <v-icon> mdi-chevron-left </v-icon>
-                                    </v-btn>
+                                </v-btn>
 
-                                    <v-btn fab text small
-                                        color="info lighten-2" @click="next">
-                                        <v-icon> mdi-chevron-right </v-icon>
-                                    </v-btn>
-                                        
-                                    <v-toolbar-title v-if="$refs.calendar">
-                                        {{ $refs.calendar.title }}
-                                    </v-toolbar-title>
-                                </v-toolbar>
-                            </v-sheet>
+                                <v-btn fab text small
+                                color="info lighten-2" @click="next">
+                                    <v-icon> mdi-chevron-right </v-icon>
+                                </v-btn>
+                                            
+                                <v-toolbar-title v-if="$refs.calendar">
+                                    {{ $refs.calendar.title }}
+                                </v-toolbar-title>
+                            </v-toolbar>
+                        </v-sheet>
+                                
+                        <v-sheet width="300">
+                            <v-calendar
+                            ref="calendar"
+                            v-model="focus"
+                            color="info lighten-2"
+                            :type="type"
+                            ></v-calendar>
+                        </v-sheet>
                             
-                            <v-sheet width="300">
-                                <v-calendar
-                                ref="calendar"
-                                v-model="focus"
-                                color="info lighten-2"
-                                :type="type"
-                                ></v-calendar>
-                            </v-sheet>
-                        </v-col>
-                    </v-row>
-                </div>
-                <!-- 캘린더 끝 -->
-            </v-menu>
-
-                
-
-                
+                    </div>
+                    <!-- 캘린더 끝 -->
+                </v-menu>
 
                 <!--사진만 보일 시 나타날 아이콘-->
-                <v-btn icon>
+                <v-btn icon @click="toggleShow" v-show="!toggle">
                     <v-icon>mdi-format-list-bulleted-square</v-icon>
                 </v-btn>
 
                 <!-- 리스트가 보일 시 나타날 아이콘-->
-                <v-btn icon>
+                <v-btn icon @click="toggleShow" v-if="toggle">
                     <v-icon>mdi-apps</v-icon>
                 </v-btn>
             
+
                 <!-- 버튼 클릭 시 일기 작성 칸 나오게-->
-                <v-btn icon>
+                <v-btn icon @click="addWrite" >
                     <v-icon>mdi-plus-circle-outline</v-icon>
                 </v-btn>
 
+
+
+                <!-- 설정 버튼 -->
                 <v-menu
                 bottom
                 left
