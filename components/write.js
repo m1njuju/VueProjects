@@ -1,9 +1,12 @@
-const EventBus = new Vue()
+
 
 Vue.component('write-component',{
     data: function() {
         return {
             dialog:false,
+            iconIndex: 0,
+            message_todo: '',
+            message_meal: '',
         }
     },
     created () {
@@ -11,10 +14,15 @@ Vue.component('write-component',{
             this.dialog=true;
         });
     },
+    methods: {
+        saveMessage () {
+            this.iconIndex = 0
+        },
+    },
     template:`
     <div>
     <!--일기 작성란 -->
-    <v-container>
+    <v-container fluid>
         <v-dialog v-model="dialog" max-width="800px">
         <v-card >
 
@@ -77,32 +85,53 @@ Vue.component('write-component',{
                 </v-card-text>
 
                 <v-card-text>
-                    <div>오늘의 할 일   <input type="text" style="position: relative; left:60px;">
-                        <v-card-actions>
-                            <v-btn icon style="position: relative; left:60px;">
-                                <v-icon dark>mdi-pencil</v-icon>
-                            </v-btn>
-                        </v-card-actions>
-                    </div><br>
-                    <div>오늘 먹은 것  <input type="text" style="position: relative; left:60px;"> 
-                        <v-card-actions>
-                            <v-btn icon style="position: relative; left:60px;">
-                                <v-icon dark>mdi-pencil</v-icon>
-                            </v-btn>
-                        </v-card-actions>
-                    </div>
-                </v-card-text>
-            </v-col>
-        </v-row>
+                                        <v-form>
+                                              <v-row>
+                                                <v-col cols="12">
+                                                  <v-text-field
+                                                    v-model="message_todo"
+                                                    :append-outer-icon="'mdi-check'"
+                                                    clear-icon="mdi-close-circle"
+                                                    clearable
+                                                    label="오늘의 할 일"
+                                                    type="text"
+                                                    @click:append-outer="saveMessage"
+                                                  ></v-text-field>
+                                                </v-col>
+                                              </v-row>
+                                          
+                                    </v-card-text>
+                                    
+                                    <v-card-text>
+                                        <v-row>
+                                            <v-col cols="12">
+                                              <v-text-field
+                                                v-model="message_meal"
+                                                :append-outer-icon="'mdi-check'"
+                                                clear-icon="mdi-close-circle"
+                                                clearable
+                                                label="오늘의 식사"
+                                                type="text"
+                                                @click:append-outer="saveMessage"
+                                              ></v-text-field>
+                                            </v-col>
+                                          </v-row>
+                            </v-card-text>
+                        </v-col>
+                    </v-row>
+            
+                    <v-divider class="mx-4"></v-divider>
 
-        <v-divider class="mx-4"></v-divider>
-
-        <!-- 긴 문장 작성 칸 -->
-        <v-card-text>
-            <div>
-                <textarea style="resize:none;" cols="90" rows="20" placeholder="오늘의 일기를 작성해 주세요"></textarea>
-            </div>
-        </v-card-text>
+                    <!-- 긴 문장 작성 칸 -->
+                    <v-row>
+                        <v-col cols="12">
+                            <v-textarea
+                            outlined
+                            label="오늘의 하루를 기록하세요"
+                            auto-grow
+                            ></v-textarea>
+                        </v-col>
+                    </v-row>
 
         <v-card-actions >
             <v-spacer></v-spacer>

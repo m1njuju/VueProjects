@@ -27,14 +27,11 @@ Vue.component('toolbar-component',{
             closeOnContentClick: false,
             toggle:true,
             dialog:false,
-            show:false,
+            show:true,
         }
     },
     computed: {
         title: function(){ return this.$refs.calendar.title}
-    },
-    mounted () {
-        this.$refs.calendar.checkChange()
     },
     methods: {
         setToday () {
@@ -50,7 +47,6 @@ Vue.component('toolbar-component',{
             this.dialog=true;
             EventBus.$emit('click');
         },
-        
         toggleShow () {
             this.show = !this.show;
             this.toggle= !this.toggle;
